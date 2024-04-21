@@ -7,102 +7,109 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            padding: 20px;
+            background-color: #f1f1f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
         .calculator {
-            max-width: 400px;
-            margin: 0 auto;
             background-color: #fff;
             border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
         }
-        .calculator input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
+        .calculator__screen {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 18px;
-        }
-        .calculator input[type="button"] {
-            width: 48%;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
             padding: 10px;
+            text-align: right;
+            width: 100%;
+        }
+        .calculator__keys {
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .calculator__key {
+            background-color: #eee;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 18px;
-            background-color: #4caf50;
-            color: #fff;
+            padding: 15px;
             transition: background-color 0.3s;
         }
-        .calculator input[type="button"]:hover {
-            background-color: #45a049;
+        .calculator__key:hover {
+            background-color: #ddd;
         }
-        .calculator input[type="reset"] {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 18px;
+        .calculator__key--equal {
+            grid-column: span 2;
+            background-color: #ff9800;
+            color: #fff;
+        }
+        .calculator__key--clear {
             background-color: #f44336;
             color: #fff;
-            transition: background-color 0.3s;
-        }
-        .calculator input[type="reset"]:hover {
-            background-color: #d32f2f;
         }
     </style>
 </head>
 <body>
     <div class="calculator">
-        <h2>공학용 계산기</h2>
-        <input type="text" id="display" readonly>
-        <br>
-        <input type="button" value="7" onclick="appendToDisplay('7')">
-        <input type="button" value="8" onclick="appendToDisplay('8')">
-        <input type="button" value="9" onclick="appendToDisplay('9')">
-        <input type="button" value="/" onclick="appendToDisplay('/')">
-        <br>
-        <input type="button" value="4" onclick="appendToDisplay('4')">
-        <input type="button" value="5" onclick="appendToDisplay('5')">
-        <input type="button" value="6" onclick="appendToDisplay('6')">
-        <input type="button" value="*" onclick="appendToDisplay('*')">
-        <br>
-        <input type="button" value="1" onclick="appendToDisplay('1')">
-        <input type="button" value="2" onclick="appendToDisplay('2')">
-        <input type="button" value="3" onclick="appendToDisplay('3')">
-        <input type="button" value="-" onclick="appendToDisplay('-')">
-        <br>
-        <input type="button" value="0" onclick="appendToDisplay('0')">
-        <input type="button" value="." onclick="appendToDisplay('.')">
-        <input type="button" value="=" onclick="calculate()">
-        <input type="button" value="+" onclick="appendToDisplay('+')">
-        <br>
-        <input type="reset" value="Reset" onclick="clearDisplay()">
+        <div class="calculator__screen" id="screen">0</div>
+        <div class="calculator__keys">
+            <button class="calculator__key">7</button>
+            <button class="calculator__key">8</button>
+            <button class="calculator__key">9</button>
+            <button class="calculator__key">/</button>
+            <button class="calculator__key">4</button>
+            <button class="calculator__key">5</button>
+            <button class="calculator__key">6</button>
+            <button class="calculator__key">*</button>
+            <button class="calculator__key">1</button>
+            <button class="calculator__key">2</button>
+            <button class="calculator__key">3</button>
+            <button class="calculator__key">-</button>
+            <button class="calculator__key">0</button>
+            <button class="calculator__key">.</button>
+            <button class="calculator__key calculator__key--equal">=</button>
+            <button class="calculator__key">+</button>
+            <button class="calculator__key calculator__key--clear" id="clear">C</button>
+        </div>
     </div>
 
     <script>
-        function appendToDisplay(value) {
-            document.getElementById('display').value += value;
-        }
-        
-        function clearDisplay() {
-            document.getElementById('display').value = '';
-        }
-        
-        function calculate() {
+        const screen = document.getElementById('screen');
+        const clearButton = document.getElementById('clear');
+
+        document.querySelectorAll('.calculator__key').forEach(key => {
+            key.addEventListener('click', () => {
+                const keyValue = key.textContent;
+                if (screen.textContent === '0' || screen.textContent === 'Error') {
+                    screen.textContent = keyValue;
+                } else {
+                    screen.textContent += keyValue;
+                }
+            });
+        });
+
+        clearButton.addEventListener('click', () => {
+            screen.textContent = '0';
+        });
+
+        document.querySelector('.calculator__key--equal').addEventListener('click', () => {
             try {
-                let result = eval(document.getElementById('display').value);
-                document.getElementById('display').value = result;
+                screen.textContent = eval(screen.textContent);
             } catch (error) {
-                document.getElementById('display').value = 'Error';
+                screen.textContent = 'Error';
             }
-        }
+        });
     </script>
 </body>
 </html>
